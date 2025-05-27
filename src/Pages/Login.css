@@ -1,0 +1,67 @@
+/* Ensure the page takes full height and removes default margins */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 80%;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5; /* Light background for contrast */
+  }
+  
+  /* Center the login container */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+  }
+  
+  /* Style the form box */
+  .login-container form {
+    border: 2px solid #ccc;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+    width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Style form labels */
+  .login-container label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  /* Style form inputs */
+  .login-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Style the submit button */
+  .login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  /* Hover effect for the button */
+  .login-container button:hover {
+    background-color: #357ae8;
+  }
+  
+  /* Optional: error message styling */
+  .login-container p {
+    color: red;
+    margin-bottom: 10px;
+  }
+  
