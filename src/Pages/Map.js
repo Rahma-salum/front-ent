@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
 
 function Map() {
     const [pharmacies, setPharmacies] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredPharmacies, setFilteredPharmacies] = useState([]);
+    const [searchResult, setSearchResult] = useState('');
 
-    // Pharmacy data: List of pharmacies with name, street, latitude, and longitude
     const pharmacyData = [
         { id: 1, name: 'SHAMSUU', street: 'STONE TOWN', lat: -6.162013, lng: 39.193179 },
         { id: 2, name: 'UNIVERSAL', street: 'STONE TOWN', lat: -6.164321, lng: 39.193842 },
@@ -36,41 +38,85 @@ function Map() {
         { id: 25, name: 'INSHIRAH', street: 'JUMBI', lat: -6.194919, lng: 39.302971 },
     ];
 
+    const medicineData = [
+        { name: 'Paracetamol', pharmacies: ['SHAMSUU', 'AFRAH', 'MD'] },
+        { name: 'Amoxicillin', pharmacies: ['UNIVERSAL', 'HILMY'] },
+        { name: 'Ibuprofen', pharmacies: ['LIFECARE', 'DUKA LA DAWA'] },
+        { name: 'Ciprofloxacin', pharmacies: ['INSHIRAH', 'IBADA'] },
+    ];
+
     useEffect(() => {
-        // Normally you'd fetch data from an API here.
-        console.log('Setting pharmacies data...');
         setPharmacies(pharmacyData);
+        setFilteredPharmacies(pharmacyData);
     }, []);
 
-    if (pharmacies.length === 0) {
-        return <div>Loading...</div>; // Temporary loading message
-    }
+    const handleSearch = () => {
+        if (searchTerm.trim() === '') {
+            setFilteredPharmacies(pharmacyData);
+            setSearchResult('');
+            return;
+        }
+
+        const found = medicineData.find(med => med.name.toLowerCase() === searchTerm.toLowerCase());
+        if (found) {
+            const matched = pharmacyData.filter(pharm => found.pharmacies.includes(pharm.name));
+            setFilteredPharmacies(matched);
+
+            if (matched.length > 0) {
+                const names = matched.map(pharm => pharm.name).join(', ');
+                setSearchResult(`Available at: ${names}`);
+            } else {
+                setSearchResult('No pharmacy found with that medicine.');
+            }
+        } else {
+            setFilteredPharmacies([]);
+            setSearchResult('No pharmacy found with that medicine.');
+        }
+    };
 
     return (
-        <MapContainer center={[-6.1659, 39.2026]} zoom={13} style={{ height: '100vh', width: '100%' }}>
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {pharmacies.map((pharmacy) => (
-                <Marker
-                    key={pharmacy.id}
-                    position={[pharmacy.lat, pharmacy.lng]}
-                    icon={new L.Icon({
-                        iconUrl: require('leaflet/dist/images/marker-icon.png'),
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                    })}
-                >
-                    <Popup>
-                        <h3>{pharmacy.name}</h3>
-                        <p>Street: {pharmacy.street}</p>
-                        <p>Location: {pharmacy.lat}, {pharmacy.lng}</p>
-                    </Popup>
-                </Marker>
-            ))}
-        </MapContainer>
+        <div>
+            <div className="search-bar">
+                <input
+                    type="text"
+                    placeholder="Search for medicine e.g. Paracetamol"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button onClick={handleSearch}>Search</button>
+            </div>
+
+            {searchResult && (
+                <div className="search-result">
+                    {searchResult}
+                </div>
+            )}
+
+            <MapContainer center={[-6.1659, 39.2026]} zoom={13} style={{ height: '90vh', width: '100%' }}>
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                {filteredPharmacies.map((pharmacy) => (
+                    <Marker
+                        key={pharmacy.id}
+                        position={[pharmacy.lat, pharmacy.lng]}
+                        icon={new L.Icon({
+                            iconUrl: require('leaflet/dist/images/marker-icon.png'),
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                        })}
+                    >
+                        <Popup>
+                            <h3>{pharmacy.name}</h3>
+                            <p>Street: {pharmacy.street}</p>
+                            <p>Location: {pharmacy.lat}, {pharmacy.lng}</p>
+                        </Popup>
+                    </Marker>
+                ))}
+            </MapContainer>
+        </div>
     );
 }
 

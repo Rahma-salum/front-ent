@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import "./DashUser.css";
+import "./DashAdmin.css";
 
 function Dashboard() {
   return (
@@ -13,11 +13,10 @@ function Dashboard() {
           <nav>
             <h3>User Navigation</h3>
             <ul>
-              {/* <li><Link to="/main/medicine">Search medicine</Link></li> */}
-              <li><Link to="/main/map">Map Location</Link></li>
-              <li><Link to="pharmacyDetails">Pharmacy Details</Link></li>
-              <li><Link to="orderForm">Order Form</Link></li>
-              <li><Link to="payment">Payment</Link></li>
+              <li><Link to="/main/adminDashbord/RegisterPharmacy">RegisterPharmacy</Link></li>
+              <li><Link to="Lists">Lists</Link></li>
+              <li><Link to="ViewOrder">ViewOrder</Link></li>
+              <li><Link to="GenerateNumber">GenerateNumber</Link></li>
               <li><Link to="/">Logout</Link></li>
             </ul>
           </nav>
